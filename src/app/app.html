@@ -1,0 +1,132 @@
+<div class="page-shell" [class.rtl]="locale === 'ar'" [class.dark]="themeMode === 'dark'" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <div class="brand-copy">
+        <p class="brand-arabic">وزارة الاقتصاد والتخطيط</p>
+        <p class="brand-english">Ministry of Economy & Planning</p>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="#" [class.active]="!assistantPageVisible" (click)="openHomePage($event)">Home</a>
+      <a href="#">Knowledgebase</a>
+      <a href="#">Media Center</a>
+      <a href="#">Entities</a>
+      <a href="#">Help</a>
+      <a
+        class="assistant-link"
+        [class.active]="assistantPageVisible"
+        href="#knowledge-assistant-page"
+        (click)="openAssistantPage($event)"
+      >
+        Knowledge Assistant
+      </a>
+    </nav>
+
+    <div class="profile-pill">
+      <div class="avatar">A</div>
+      <div>
+        <p class="profile-name">Aziz Khalidy</p>
+        <p class="profile-role">Researcher</p>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button type="button" (click)="toggleLocale()">
+        {{ locale === 'en' ? 'Arabic' : 'English' }}
+      </button>
+      <button type="button" (click)="toggleTheme()">
+        {{ themeMode === 'light' ? 'Dark' : 'Light' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="breadcrumb-bar">
+    <a href="#">Home</a>
+    <span>/</span>
+    <span>{{ assistantPageVisible ? 'Knowledge Assistant' : 'Widget Demo' }}</span>
+  </div>
+
+  <main class="content-shell" [class.full-screen]="assistantPageVisible">
+    <section class="home-content" [class.hidden]="assistantPageVisible">
+      <section class="hero-strip">
+        <article class="graph-entry-card">
+          <p class="eyebrow">Knowledge Graph Demo</p>
+          <h1>Explore the document graph from the test site</h1>
+          <p class="copy">
+            This test page is configured with a document UUID and the NestJS proxy route.
+            Open the assistant page and use the built-in Knowledge Graph button to switch
+            between the 2D and 3D graph views.
+          </p>
+
+          <div class="graph-entry-actions">
+            <button type="button" class="open-page-button" (click)="openKnowledgeGraphDemo($event)">
+              View Knowledge Graph
+            </button>
+            <div class="graph-meta">
+              <span>Doc UUID</span>
+              <strong>{{ graphDocumentUuid }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <!-- <div>
+          <p class="eyebrow">Hybrid Widget Test</p>
+          <h1>Knowledge Assistant</h1>
+          <p class="copy">
+            The floating widget stays available in the bottom-right corner. When
+            the user opens the Knowledge Assistant page from the navbar or from
+            the widget menu, the full embedded chat page appears on the separate
+            page layout.
+          </p>
+        </div> -->
+
+        <!-- <aside class="mode-card">
+          <p><strong>Active mode:</strong> {{ mode }}</p>
+          <p><strong>Script mode:</strong> <a href="/?widgetMode=script">/?widgetMode=script</a></p>
+          <p><strong>NPM mode:</strong> <a href="/?widgetMode=npm">/?widgetMode=npm</a></p>
+          <p class="hint">
+            Use this home view only for testing the launcher and switching
+            between script and npm mode.
+          </p>
+        </aside> -->
+      </section>
+
+      <!-- <section class="intro-card">
+        <div>
+          <p class="intro-label">Home page</p>
+          <h2>Widget launcher stays global</h2>
+          <p>
+            This screen acts like the normal client website home page. The
+            floating launcher should remain available here. When the user opens
+            the Knowledge Assistant page, the dedicated page below is shown.
+          </p>
+        </div>
+
+        <button type="button" class="open-page-button" (click)="openAssistantPage()">
+          Open Knowledge Assistant Page
+        </button>
+        </section> -->
+    </section> 
+
+    <section
+      id="knowledge-assistant-page"
+      class="assistant-page"
+      [class.visible]="assistantPageVisible"
+    >
+      <div #chatRoot class="knowledge-assistant-root">
+        <chat-widget *ngIf="assistantPageVisible" [config]="embeddedConfig"></chat-widget>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#">Privacy policy</a>
+    <a href="#">Usage policy</a>
+    <a href="#">Terms & conditions</a>
+    <a href="#">Accessibility</a>
+  </footer>
+  
+  <chat-widget *ngIf="!assistantPageVisible" [config]="floatingConfig"></chat-widget>
+</div>

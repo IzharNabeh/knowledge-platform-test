@@ -1,0 +1,152 @@
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChatWidgetModule, ChatWidgetConfig } from '@nabeh/chat-widget-angular';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, ChatWidgetModule],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
+export class App {
+  readonly graphDocumentUuid = 'd79acd53-4def-47ff-823c-da8aea341259';
+
+  @ViewChild('chatRoot', { static: true })
+  private chatRoot?: ElementRef<HTMLElement>;
+
+  assistantPageVisible = false;
+  locale: 'en' | 'ar' = 'en';
+  themeMode: 'light' | 'dark' = 'light';
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  openHomePage(event?: Event): void {
+    event?.preventDefault();
+    this.assistantPageVisible = false;
+  }
+
+  async openAssistantPage(event?: Event): Promise<void> {
+    event?.preventDefault();
+    this.assistantPageVisible = true;
+
+    this.cdr.detectChanges(); 
+
+    await new Promise((resolve) => window.setTimeout(resolve, 40));
+    this.chatRoot?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async openKnowledgeGraphDemo(event?: Event): Promise<void> {
+    await this.openAssistantPage(event);
+  }
+
+  toggleLocale(): void {
+    this.locale = this.locale === 'en' ? 'ar' : 'en';
+    document.documentElement.dir = this.locale === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = this.locale;
+    this.rebuildWidgetConfigs();
+  }
+
+  toggleTheme(): void {
+    this.themeMode = this.themeMode === 'light' ? 'dark' : 'light';
+    this.rebuildWidgetConfigs();
+  }
+
+  private get isArabic(): boolean {
+    return this.locale === 'ar';
+  }
+
+  private get activeTheme(): ChatWidgetConfig['theme'] {
+    return this.themeMode === 'dark'
+      ? {
+          accent: '#10a37f',
+  accentSoft: '#12372f',
+  panelBackground: '#202123',
+  surfaceBackground: '#2a2b32',
+  text: '#ececec',
+  mutedText: '#a3a3a3',
+  borderColor: '#3d3d3d',
+  shadow: '0 24px 64px rgba(0,0,0,0.45)'
+        }
+      : {
+          accent: '#0f766e',
+          accentSoft: '#ecfeff',
+          panelBackground: '#ffffff',
+          surfaceBackground: '#f8fafc',
+          text: '#1f2937',
+          mutedText: '#64748b',
+          borderColor: '#dbe4ee',
+          shadow: '0 24px 64px rgba(15, 23, 42, 0.20)'
+        };
+  }
+
+  private buildSharedConfig(): ChatWidgetConfig {
+    return {
+        apiBaseUrl: 'http://183.82.145.33:9090',
+        position: 'bottom-right',
+        locale: this.locale,
+        theme: this.activeTheme,
+        rag: {
+          loadHistoryOnOpen: true,
+          sourceUuid: this.graphDocumentUuid
+        },
+        knowledgeGraph: {
+          enabled: true,
+          defaultViewMode: '2d',
+          maxNodes: 500,
+          maxEdges: 1000,
+          title: 'Document Knowledge Graph'
+        },
+       getAccessToken: async () => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJna21wLWJhY2tlbmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDE0MzI0LCJleHAiOjE3ODYwMTUyMjR9.mLlcxdyZDuzNzcWmR8xpaqrVvVGRLYp-_onniyHaJC8',
+        userInfo: async () => ({
+          firstName: 'Aemo',
+          lastName: 'Kser10',
+          // avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM2QzYzRkYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRjQwODEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg=='
+        }),
+        getUserContext: async () => ({
+          userId: 'demo-user-10',
+          email: 'demo10@example.com',
+        })
+      };
+  }
+
+  floatingConfig: ChatWidgetConfig = {
+    ...this.buildSharedConfig(),
+    displayMode: 'widget',
+    onOpenAssistantPage: async () => {
+      await this.openAssistantPage();
+    }
+  };
+
+  embeddedConfig: ChatWidgetConfig = {
+    ...this.buildSharedConfig(),
+    displayMode: 'embedded',
+    embedded: {
+      showHeader: false
+    }
+  };
+
+  private rebuildWidgetConfigs(): void {
+    const shared = this.buildSharedConfig();
+    this.floatingConfig = {
+      ...shared,
+      displayMode: 'widget',
+      onOpenAssistantPage: async () => {
+        await this.openAssistantPage();
+      }
+    };
+    this.embeddedConfig = {
+      ...shared,
+      displayMode: 'embedded',
+      embedded: {
+        showHeader: false
+      }
+    };
+    this.cdr.detectChanges();
+  }
+}
