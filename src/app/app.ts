@@ -102,15 +102,15 @@ export class App {
           maxEdges: 1000,
           title: 'Document Knowledge Graph'
         },
-       getAccessToken: async () => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJna21wLWJhY2tlbmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDE0MzI0LCJleHAiOjE3ODYwMTUyMjR9.mLlcxdyZDuzNzcWmR8xpaqrVvVGRLYp-_onniyHaJC8',
+       getAccessToken: async () => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJna21wLWJhY2tlbmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2NDI2MzE4LCJleHAiOjE3ODY0MjcyMTh9.YRQ2RYl7pl5YHXa5L0Wsp0W_y8YEcr4v3SiMYmBN2kA',
         userInfo: async () => ({
-          firstName: 'Aemo',
-          lastName: 'Kser10',
+          firstName: 'Demo',
+          lastName: 'User10',
           // avatar: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM2QzYzRkYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNGRjQwODEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg=='
         }),
         getUserContext: async () => ({
           userId: 'demo-user-10',
-          email: 'demo10@example.com',
+          email: 'demo10@example.com'
         })
       };
   }
