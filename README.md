@@ -4,10 +4,36 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+This test app includes a development-only customer proxy. It reproduces the
+production responsibility of injecting `username` and `groups` into streaming
+request payloads before they reach NestJS.
+
+Start the proxy in the first terminal:
 
 ```bash
-ng serve
+npm run proxy
+```
+
+It defaults to:
+
+- NestJS: `http://183.82.145.33:9090`
+- Local proxy: `http://localhost:9091`
+- Username: `demo10@example.com`
+- Groups: `finance`
+
+Override these values when needed:
+
+```bash
+NEST_API_BASE_URL=http://localhost:8788 \
+TEST_CHAT_USERNAME=alice@example.com \
+TEST_CHAT_GROUPS=finance,legal \
+npm run proxy
+```
+
+Start Angular in a second terminal:
+
+```bash
+npm start
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
