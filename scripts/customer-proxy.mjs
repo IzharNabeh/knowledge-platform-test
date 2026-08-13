@@ -3,6 +3,7 @@ import { createServer } from "node:http";
 const port = Number(process.env.TEST_PROXY_PORT ?? 9091);
 const nestBaseUrl = (
   process.env.NEST_API_BASE_URL ?? "http://183.82.145.33:9090"
+  // process.env.NEST_API_BASE_URL ?? "http://localhost:8788"
 ).replace(/\/+$/, "");
 const testUsername = process.env.TEST_CHAT_USERNAME ?? "demo10@example.com";
 const testGroups = (process.env.TEST_CHAT_GROUPS ?? "finance")
@@ -44,11 +45,15 @@ const server = createServer(async (request, response) => {
   try {
     const bodyBuffer = await readBody(request);
     let body = bodyBuffer.length ? bodyBuffer : undefined;
-    const isStreamRequest =
-      request.method === "POST" &&
-      /^\/my-chats\/[^/]+\/messages\/stream\/?(?:\?.*)?$/.test(request.url ?? "");
+    const pathname = (request.url ?? "").split("?")[0].replace(/\/$/, "");
+    const needsProxyUser = request.method === "POST" && (
+      pathname === "/my-chats" ||
+      pathname === "/my-chats/list" ||
+      /^\/my-chats\/[^/]+\/(?:feedback|delete)$/.test(pathname) ||
+      /^\/my-chats\/[^/]+\/messages\/(?:history|stream)$/.test(pathname)
+    ) || request.method === "PUT" && /^\/my-chats\/[^/]+$/.test(pathname);
 
-    if (isStreamRequest) {
+    if (needsProxyUser) {
       const widgetPayload = JSON.parse(bodyBuffer.toString("utf8"));
       body = JSON.stringify({
         ...widgetPayload,
@@ -56,7 +61,7 @@ const server = createServer(async (request, response) => {
         groups: testGroups
       });
 
-      console.log("[customer-proxy] Injected stream context", {
+      console.log("[customer-proxy] Injected user context", {
         username: testUsername,
         groups: testGroups
       });

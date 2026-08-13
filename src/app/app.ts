@@ -93,7 +93,7 @@ export class App {
         theme: this.activeTheme,
         rag: {
           loadHistoryOnOpen: true,
-          sourceUuid: this.graphDocumentUuid
+          sourceUuid: this.graphDocumentUuid,
         },
         knowledgeGraph: {
           enabled: true,
@@ -102,7 +102,7 @@ export class App {
           maxEdges: 1000,
           title: 'Document Knowledge Graph'
         },
-       getAccessToken: async () => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJna21wLWJhY2tlbmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2NTM0NTkyLCJleHAiOjE3ODY1MzU0OTJ9.p136Tuped-IkBN0jObvzomPl070kPZ8tGF5xRcizfWc',
+       getAccessToken: async () => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJna21wLWJhY2tlbmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2NjE4MjE2LCJleHAiOjE3ODY2MTkxMTZ9.yUTr-kj-ZX7k8cN7H_Hh2w7oJUErioESCREVUtSuJ1o',
         userInfo: async () => ({
           firstName: 'Demo',
           lastName: 'User10',
